@@ -15,7 +15,11 @@
  *
  ******************************************************************************/
 #include "blink_pwm_app.h"
+#include "sl_button.h"
+#include "sl_simple_button.h"
 
+extern const sl_button_t sl_button_btn0;
+uint8_t blinking_max_period=0;
 /***************************************************************************//**
  * Initialize application.
  ******************************************************************************/
@@ -32,10 +36,21 @@ void app_process_action(void)
   blink_pwm_process_action();
 //  sl_button_on_change(&sl_button_btn0);
 }
-//
-//void sl_button_on_change(const sl_button_t *handle)
-//{
-//  handle
-//}
 
 
+
+/***************************************************************************//**
+ * Callback on button change.
+ ******************************************************************************/
+void sl_button_on_change(const sl_button_t *handle)
+{
+  if (sl_button_get_state(handle) == SL_SIMPLE_BUTTON_PRESSED) {
+    if (&sl_button_btn0 == handle) {
+//      sl_led_toggle(&LED_INSTANCE_0);
+         if(blinking_max_period>=250)
+           blinking_max_period = 0;
+         else
+           blinking_max_period+=50;
+    }
+  }
+}

@@ -41,18 +41,20 @@ void blink_pwm_init(void)
 
 void blink_pwm_process_action(void)
 {
-  static uint8_t blinking_max_period = 100;
+  extern uint8_t blinking_max_period;
+//  uint8_t blinking_max_period = 100;
+
   for (uint8_t i = 0; i < blinking_max_period; i++) {
-    sl_pwm_set_duty_cycle(&sl_pwm_led0, pwm_lut[i]);
+    sl_pwm_set_duty_cycle(&sl_pwm_led0, pwm_lut[i*100/blinking_max_period]);
     sl_sleeptimer_delay_millisecond(6);
     if (i == 0) {
       sl_sleeptimer_delay_millisecond(190);
     }
   }
   for (uint8_t i = blinking_max_period; i > 0; i--) {
-    sl_pwm_set_duty_cycle(&sl_pwm_led0, pwm_lut[i]);
+    sl_pwm_set_duty_cycle(&sl_pwm_led0, pwm_lut[i*100/blinking_max_period]);
     sl_sleeptimer_delay_millisecond(6);
-    if (i == 100) {
+    if (i == blinking_max_period) {
       sl_sleeptimer_delay_millisecond(190);
     }
   }
